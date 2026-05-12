@@ -2,9 +2,9 @@
    Carlos · 50 Años — Script principal
    ══════════════════════════════════════════ */
 
-emailjs.init("YOUR_PUBLIC_KEY");         // ← tu Public Key de EmailJS
-const SERVICE_ID  = "YOUR_SERVICE_ID";  // ← tu Service ID
-const TEMPLATE_ID = "YOUR_TEMPLATE_ID"; // ← tu Template ID
+emailjs.init("O9TA18-zps7iaEptM");
+const SERVICE_ID  = "service_6m7prwn";
+const TEMPLATE_ID = "template_41pvc6t";
 
 
 /* ════════════════════════════════════════
@@ -107,7 +107,8 @@ document.getElementById('rsvp-form').addEventListener('submit', function (e) {
                 btn.style.background = '';
             }, 5000);
         })
-        .catch(() => {
+        .catch((err) => {
+            console.error('EmailJS error:', JSON.stringify(err));
             btn.disabled        = false;
             btnText.textContent = 'Error — intenta de nuevo';
             btn.style.background = '#8b2020';
