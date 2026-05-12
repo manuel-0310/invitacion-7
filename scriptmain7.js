@@ -2,11 +2,7 @@
    Carlos · 50 Años — Script principal
    ══════════════════════════════════════════ */
 
-/* ── EmailJS Config ─────────────────────────
-   Reemplaza con tus claves reales de EmailJS
-   ─────────────────────────────────────────── */
 emailjs.init("YOUR_PUBLIC_KEY");         // ← tu Public Key de EmailJS
-
 const SERVICE_ID  = "YOUR_SERVICE_ID";  // ← tu Service ID
 const TEMPLATE_ID = "YOUR_TEMPLATE_ID"; // ← tu Template ID
 
@@ -33,8 +29,6 @@ function launchMain() {
     }, 900);
 }
 
-// Auto-launch after 6 s si el usuario no hace click
-setTimeout(launchMain, 6000);
 
 
 /* ════════════════════════════════════════
@@ -49,7 +43,7 @@ function initCountdown() {
     const elSec   = document.getElementById('seconds');
     const elTimer = document.getElementById('timer');
 
-    const pad = n => (n < 10 ? '0' : '') + n;
+    const pad = n => String(n).padStart(2, '0');
 
     const tick = () => {
         const diff = TARGET - Date.now();
@@ -57,19 +51,14 @@ function initCountdown() {
         if (diff <= 0) {
             clearInterval(interval);
             elTimer.innerHTML =
-                '<span class="board-num" style="font-size:clamp(22px,6vw,32px);color:var(--gold)">¡ES HOY!</span>';
+                '<span class="board-num" style="font-size:clamp(18px,5vw,28px);color:var(--yellow)">¡ES HOY!</span>';
             return;
         }
 
-        const d = Math.floor(diff / 86400000);
-        const h = Math.floor((diff % 86400000) / 3600000);
-        const m = Math.floor((diff % 3600000)  / 60000);
-        const s = Math.floor((diff % 60000)    / 1000);
-
-        elDays.textContent    = pad(d);
-        elHours.textContent   = pad(h);
-        elMin.textContent     = pad(m);
-        elSec.textContent     = pad(s);
+        elDays.textContent  = pad(Math.floor(diff / 86400000));
+        elHours.textContent = pad(Math.floor((diff % 86400000) / 3600000));
+        elMin.textContent   = pad(Math.floor((diff % 3600000)  / 60000));
+        elSec.textContent   = pad(Math.floor((diff % 60000)    / 1000));
     };
 
     tick();
@@ -81,8 +70,6 @@ function initCountdown() {
    SCROLL REVEAL
    ════════════════════════════════════════ */
 function initReveal() {
-    const items = document.querySelectorAll('.reveal');
-
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -92,7 +79,7 @@ function initReveal() {
         });
     }, { threshold: 0.10 });
 
-    items.forEach(el => observer.observe(el));
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 }
 
 
@@ -105,29 +92,28 @@ document.getElementById('rsvp-form').addEventListener('submit', function (e) {
     const btn     = document.getElementById('button-send');
     const btnText = document.getElementById('btn-text');
 
-    btn.disabled       = true;
+    btn.disabled        = true;
     btnText.textContent = 'Enviando…';
 
     emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, this)
         .then(() => {
             btnText.textContent  = '✓  ¡Confirmado!';
-            btn.style.background = '#5C6B3A';   /* olive green */
+            btn.style.background = '#5c6b3a';
             this.reset();
 
-            // Reset button after 5 s
             setTimeout(() => {
-                btn.disabled         = false;
-                btnText.textContent  = 'Confirmar';
+                btn.disabled        = false;
+                btnText.textContent = 'Confirmar Asistencia';
                 btn.style.background = '';
             }, 5000);
         })
         .catch(() => {
-            btn.disabled         = false;
-            btnText.textContent  = 'Error — intenta de nuevo';
-            btn.style.background = '#8B2020';
+            btn.disabled        = false;
+            btnText.textContent = 'Error — intenta de nuevo';
+            btn.style.background = '#8b2020';
 
             setTimeout(() => {
-                btnText.textContent  = 'Confirmar';
+                btnText.textContent  = 'Confirmar Asistencia';
                 btn.style.background = '';
             }, 3500);
         });
