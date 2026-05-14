@@ -92,10 +92,21 @@ document.getElementById('rsvp-form').addEventListener('submit', function (e) {
     const btn     = document.getElementById('button-send');
     const btnText = document.getElementById('btn-text');
 
+    const alergias = this.allergies.value.trim() || 'Ninguna';
+    const correo   = this.reply_to.value.trim();
+
     btn.disabled        = true;
     btnText.textContent = 'Enviando…';
 
-    emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, this)
+    emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+        couple_name: this.couple_name.value,
+        from_name:   this.from_name.value,
+        last_name:   this.last_name.value,
+        age:         this.age.value,
+        attendance:  this.attendance.value,
+        reply_to:    correo,
+        allergies:   alergias + '\nCorreo: ' + correo,
+    })
         .then(() => {
             btnText.textContent  = '✓  ¡Confirmado!';
             btn.style.background = '#5c6b3a';
