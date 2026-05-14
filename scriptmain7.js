@@ -2,9 +2,7 @@
    Carlos · 50 Años — Script principal
    ══════════════════════════════════════════ */
 
-emailjs.init("O9TA18-zps7iaEptM");
-const SERVICE_ID  = "service_6m7prwn";
-const TEMPLATE_ID = "template_41pvc6t";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbzuGHeAHfmnIfik20u7OyyG4qzM-H0Dgb0t65OWcjzG2oCn_17O76Tv-py7U05Lz_rVZA/exec";
 
 
 /* ════════════════════════════════════════
@@ -84,7 +82,7 @@ function initReveal() {
 
 
 /* ════════════════════════════════════════
-   RSVP FORM — EmailJS
+   RSVP FORM — Google Sheets
    ════════════════════════════════════════ */
 document.getElementById('rsvp-form').addEventListener('submit', function (e) {
     e.preventDefault();
@@ -92,20 +90,24 @@ document.getElementById('rsvp-form').addEventListener('submit', function (e) {
     const btn     = document.getElementById('button-send');
     const btnText = document.getElementById('btn-text');
 
-    const alergias = this.allergies.value.trim() || 'Ninguna';
-    const correo   = this.reply_to.value.trim();
-
     btn.disabled        = true;
     btnText.textContent = 'Enviando…';
 
-    emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+    const payload = JSON.stringify({
         couple_name: this.couple_name.value,
         from_name:   this.from_name.value,
         last_name:   this.last_name.value,
+        reply_to:    this.reply_to.value.trim(),
         age:         this.age.value,
         attendance:  this.attendance.value,
-        reply_to:    correo,
-        allergies:   alergias + '\nCorreo: ' + correo,
+        allergies:   this.allergies.value.trim() || 'Ninguna',
+    });
+
+    fetch(SHEET_URL, {
+        method:  'POST',
+        mode:    'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body:    payload,
     })
         .then(() => {
             btnText.textContent  = '✓  ¡Confirmado!';
@@ -113,15 +115,15 @@ document.getElementById('rsvp-form').addEventListener('submit', function (e) {
             this.reset();
 
             setTimeout(() => {
-                btn.disabled        = false;
-                btnText.textContent = 'Confirmar Asistencia';
+                btn.disabled         = false;
+                btnText.textContent  = 'Confirmar Asistencia';
                 btn.style.background = '';
             }, 5000);
         })
         .catch((err) => {
-            console.error('EmailJS error:', JSON.stringify(err));
-            btn.disabled        = false;
-            btnText.textContent = 'Error — intenta de nuevo';
+            console.error('Sheets error:', err);
+            btn.disabled         = false;
+            btnText.textContent  = 'Error — intenta de nuevo';
             btn.style.background = '#8b2020';
 
             setTimeout(() => {
