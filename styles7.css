@@ -834,6 +834,27 @@ body {
     margin-top: 4px;
     letter-spacing: 1px;
 }
+.dress-guide {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+.dress-guide-img {
+    width: 100%;
+    max-width: 280px;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+}
+.dress-guide-caption {
+    font-family: var(--f-body);
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--cream);
+    opacity: 0.8;
+}
 
 /* ════════════════════════════════════════
    LLUVIA DE SOBRES
